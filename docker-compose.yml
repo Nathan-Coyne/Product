@@ -1,0 +1,56 @@
+services:
+  prodapi:
+    container_name: prodapi
+    "build": {
+      "dockerfile": "Dockerfile"
+    }
+    ports:
+      - "9001:9001"  # for PHP-FPM
+      - "44858:44858"  # for Xdebug
+    environment:
+      XDEBUG_MODE: debug
+      XDEBUG_CONFIG: client_host=172.17.0.1 client_port=44858
+      DB_CONNECTION: mysql
+      DB_HOST: prodmysql  # This should match the MySQL service name
+      DB_PORT: 3307
+      DB_DATABASE: prod  # Ensure this matches the created database name
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    volumes:
+      - ./api:/var/www/html/
+    restart: unless-stopped
+    command: >
+      sh -c "composer install &&
+      php artisan serve --host=0.0.0.0 --port=9001"
+    networks:
+      - product-network
+  prodmysql:
+    image: mysql:5.7
+    container_name: prodmysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_USERNAME: prod
+      MYSQL_PASSWORD: root
+
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prod
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - product-network
+  prodfrontend:
+    container_name: prodfrontend
+    build:
+      context: ./frontend-backup
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"  # Assuming the Vue.js app runs on port 8080
+    volumes:
+      - ./frontend-backup/product:/app
+    networks:
+      - product-network
+    command: sh -c "npm run serve -- --host 0.0.0.0 --port 8081"
+networks:
+  product-network:
+    driver: bridge
