@@ -23,6 +23,7 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::get('/sub-categories/{id}/products', [ProductController::class, 'showBySubCategoryId']);
 
+Route::get('/categories/{id}/sub-categories/products', [ProductController::class, 'showByCategoryId']);
 
 // Define a GET endpoint
 Route::get('/categories', [CategoryController::class, 'index']);

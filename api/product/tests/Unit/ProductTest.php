@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Database\Seeders\ProductSeeder;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -73,6 +72,13 @@ class ProductTest extends BaseTestCase
         $response = $this->get('/api/sub-categories/1/products');
         $response->assertStatus(200);
         $response->assertJsonCount(2);
+    }
+
+    public function test_product_get_by_category(): void
+    {
+        $response = $this->get('/api/categories/1/sub-categories/products');
+        $response->assertStatus(200);
+        $response->assertJsonCount(4);
     }
 
     public function test_sub_category_get_by_category(): void

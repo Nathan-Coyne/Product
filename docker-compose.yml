@@ -12,9 +12,9 @@ services:
       XDEBUG_CONFIG: client_host=172.17.0.1 client_port=44858
       DB_CONNECTION: mysql
       DB_HOST: prodmysql  # This should match the MySQL service name
-      DB_PORT: 3307
+      DB_PORT: 3306
       DB_DATABASE: prod  # Ensure this matches the created database name
-      DB_USERNAME: root
+      DB_USERNAME: prod
       DB_PASSWORD: root
     volumes:
       - ./api:/var/www/html/
@@ -32,7 +32,6 @@ services:
     environment:
       MYSQL_USERNAME: prod
       MYSQL_PASSWORD: root
-
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: prod
     volumes:
